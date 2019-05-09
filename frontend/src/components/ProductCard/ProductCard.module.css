@@ -1,0 +1,8 @@
+.Price {
+	position: absolute;
+	top: -1.5rem;
+	right: 1rem;
+}
+.Price p {
+	font-size: 25px;
+}

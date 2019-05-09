@@ -17,7 +17,7 @@ class SignUp extends Component {
 	submitHandler = (e) => {
 		e.preventDefault();
 		console.log(this.state);
-		registerUser(this.state.name, this.state.email, this.state.password);
+		this.props.registerUser(this.state);
 	};
 
 	render() {
