@@ -1,11 +1,33 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-export default function navbar(props) {
+const Navbar = function(props) {
 	let numberOfItems = null;
 	if (props.items > 0) {
 		numberOfItems = <span className="badge badge-danger">{props.items}</span>;
 	}
+	const userLinks = (
+		<NavLink to="/user/cart" className="btn btn-light mx-2">
+			Cart {numberOfItems}
+		</NavLink>
+	);
+	const companyLinks = (
+		<NavLink to="/new-product" className="btn btn-light mx-2">
+			Sell Product
+		</NavLink>
+	);
+
+	const guestLinks = (
+		<React.Fragment>
+			<NavLink to="login" className="btn btn-outline-light mx-2">
+				Login
+			</NavLink>
+			<NavLink to="signup" className="btn btn-outline-light mx-2">
+				Sign up
+			</NavLink>
+		</React.Fragment>
+	);
 	return (
 		<div className="py-2 bg-primary">
 			<div className="container">
@@ -16,21 +38,18 @@ export default function navbar(props) {
 						</NavLink>
 					</div>
 					<div>
-						<NavLink to="/new-product" className="btn btn-light mx-2">
-							Sell Product
-						</NavLink>
-						<NavLink to="/cart" className="btn btn-light mx-2">
-							Cart {numberOfItems}
-						</NavLink>
-						<NavLink to="login" className="btn btn-outline-light mx-2">
-							Login
-						</NavLink>
-						<NavLink to="signup" className="btn btn-outline-light mx-2">
-							Sign up
-						</NavLink>
+						{props.auth.userType === false ? guestLinks : null}
+						{props.auth.userType === 'user' ? userLinks : null}
+						{props.auth.userType === 'company' ? companyLinks : null}
 					</div>
 				</nav>
 			</div>
 		</div>
 	);
-}
+};
+
+const mapStateToProps = (state) => ({
+	auth: state.auth
+});
+
+export default connect(mapStateToProps)(Navbar);

@@ -15,7 +15,7 @@ class Products extends Component {
 		) : (
 			this.props.products.products.map((product) => {
 				return (
-					<div className="col-md-4 my-3" key={product.id}>
+					<div className="col-md-4 my-3" key={product._id}>
 						<ProductCard
 							title={product.title}
 							id={product._id}
