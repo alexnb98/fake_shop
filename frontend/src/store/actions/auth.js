@@ -53,6 +53,14 @@ export const setUserType = () => (dispatch) => {
 	const token = localStorage.token;
 	if (!token) return dispatch({ type: actions.SET_USER_TYPE, payload: false });
 	const decode = jwt_decode(token);
-	if (decode.company) return dispatch({ type: actions.SET_USER_TYPE, payload: 'company' });
-	if (decode.user) return dispatch({ type: actions.SET_USER_TYPE, payload: 'user' });
+	if (decode.company) {
+		return dispatch({ type: actions.SET_USER_TYPE, payload: { type: 'company', id: decode.company.id } });
+	}
+	if (decode.user) {
+		return dispatch({ type: actions.SET_USER_TYPE, payload: { type: 'user', id: decode.user.id } });
+	}
+};
+
+export const logout = () => (dispatch) => {
+	dispatch({ type: actions.LOGOUT });
 };

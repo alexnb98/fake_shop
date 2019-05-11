@@ -1,6 +1,7 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { logout } from '../store/actions/auth';
 
 const Navbar = function(props) {
 	let numberOfItems = null;
@@ -8,14 +9,27 @@ const Navbar = function(props) {
 		numberOfItems = <span className="badge badge-danger">{props.items}</span>;
 	}
 	const userLinks = (
-		<NavLink to="/user/cart" className="btn btn-light mx-2">
-			Cart {numberOfItems}
-		</NavLink>
+		<React.Fragment>
+			<NavLink to="/user/cart" className="btn btn-light mx-2">
+				Cart {numberOfItems}
+			</NavLink>
+			<Link to="/" className="btn btn-light mx-2" onClick={props.logout}>
+				Logout
+			</Link>
+		</React.Fragment>
 	);
 	const companyLinks = (
-		<NavLink to="/new-product" className="btn btn-light mx-2">
-			Sell Product
-		</NavLink>
+		<React.Fragment>
+			<NavLink to="/company/products" className="btn btn-light mx-2">
+				My Products
+			</NavLink>
+			<NavLink to="/company/create-product" className="btn btn-light mx-2">
+				Create Product
+			</NavLink>
+			<Link to="/" className="btn btn-light mx-2" onClick={props.logout}>
+				Logout
+			</Link>
+		</React.Fragment>
 	);
 
 	const guestLinks = (
@@ -52,4 +66,4 @@ const mapStateToProps = (state) => ({
 	auth: state.auth
 });
 
-export default connect(mapStateToProps)(Navbar);
+export default connect(mapStateToProps, { logout })(Navbar);

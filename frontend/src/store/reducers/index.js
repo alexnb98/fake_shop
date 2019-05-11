@@ -1,12 +1,14 @@
 import { combineReducers } from 'redux';
 import auth from './auth';
-import products from './products';
+import general from './general';
 import alert from './alert';
 import user from './user';
+import company from './company';
 
 export default combineReducers({
 	auth,
 	alert,
-	products,
+	general,
+	company,
 	user
 });

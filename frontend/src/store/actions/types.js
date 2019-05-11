@@ -14,6 +14,7 @@ export const GET_PRODUCTS_FAIL = 'GET_PRODUCTS_FAIL';
 export const LOGIN_START = 'LOGIN_START';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAIL = 'LOGIN_FAIL';
+export const LOGOUT = 'LOGOUT';
 
 export const GET_CART = 'GET_CART';
 export const GET_CART_SUCCESS = 'GET_CART_SUCCESS';

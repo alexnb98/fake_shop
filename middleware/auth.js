@@ -12,6 +12,7 @@ module.exports = (req, res, next) => {
 		if (decoded.company) req.company = decoded.company;
 		next();
 	} catch (err) {
+		console.error(err.message);
 		res.status(401).json({ msg: 'Session not valid, please sign in again' });
 	}
 };

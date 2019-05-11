@@ -3,11 +3,11 @@ import { Provider } from 'react-redux';
 import store from './store/store';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import Products from './containers/Products/Products';
 import Alert from './components/Alert';
 import { setUserType } from './store/actions/auth';
 import setAuthToken from './utils/setAuthToken';
 import Routes from './components/routes/Routes';
+import Landing from './containers/Landing';
 
 if (localStorage.token) {
 	setAuthToken(localStorage.token);
@@ -26,7 +26,7 @@ class App extends Component {
 						<Alert />
 						<Navbar />
 						<Switch>
-							<Route path="/" exact component={Products} />
+							<Route path="/" exact component={Landing} />
 							<Route component={Routes} />
 						</Switch>
 					</div>

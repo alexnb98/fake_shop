@@ -9,6 +9,20 @@ const auth = require('../../middleware/auth');
 const Company = require('../../models/Company');
 const Product = require('../../models/Product');
 
+// @route    GET api/company/products
+// @desc     Get all companies products
+// @access   Private
+router.get('/products', auth, async (req, res) => {
+	try {
+		const products = await Product.find({ companyRef: req.company.id });
+		if (!products) return res.status(400).json({ msg: 'No products found' });
+		res.json(products);
+	} catch (err) {
+		console.error(err.message);
+		res.status(500).send('Server Error');
+	}
+});
+
 // @route    POST api/company/register
 // @desc     Register company
 // @access   Public

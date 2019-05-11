@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Pill from './Pill';
 import SelectPill from './SelectPill';
+import { setAlert } from '../../store/actions/alert';
 
 class Product extends Component {
 	state = {
@@ -13,7 +14,7 @@ class Product extends Component {
 
 	componentDidMount() {
 		const productId = this.props.match.params.id;
-		let product = this.props.products.products.filter((item) => item._id === productId);
+		let product = this.props.general.products.filter((item) => item._id === productId);
 		if (!product[0]) {
 			axios
 				.get(`/api/product/${productId}`)
@@ -27,8 +28,18 @@ class Product extends Component {
 		}
 	}
 
+	deleteProduct = async () => {
+		try {
+			await axios.delete(`/api/company/${this.props.match.params.id}`);
+			this.props.setAlert('Product Deleted', 'success');
+			this.props.history.push('/company/products');
+		} catch (err) {
+			console.error({ ...err });
+		}
+	};
+
 	render() {
-		const { product } = this.state;
+		const { product } = this.props.general;
 		let productComponent = (
 			<div className="my-5 alert alert-danger w-100 p-3" role="alert">
 				<p>Something went wrong.</p>
@@ -76,7 +87,16 @@ class Product extends Component {
 					<div className="col-12 my-3 mx-3 p-3 shadow">
 						<h1>{product.title}</h1>
 						<p>{product.description}</p>
+						<p>Company Ref: {product.companyRef}</p>
 					</div>
+					{product.companyRef === this.props.auth.id ? (
+						<div className="mt-3">
+							<button onClick={this.deleteProduct} className="btn btn-danger btn-lg mr-3">
+								DELETE PRODUCT
+							</button>
+							<button className="btn btn-warning btn-lg">EDIT PRODUCT</button>
+						</div>
+					) : null}
 				</React.Fragment>
 			);
 		}
@@ -91,7 +111,8 @@ class Product extends Component {
 }
 
 const mapStateToProps = (state) => ({
-	products: state.products
+	general: state.general,
+	auth: state.auth
 });
 
-export default connect(mapStateToProps)(Product);
+export default connect(mapStateToProps, { setAlert })(Product);
