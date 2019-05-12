@@ -13,6 +13,9 @@ const Navbar = function(props) {
 			<NavLink to="/user/cart" className="btn btn-light mx-2">
 				Cart {numberOfItems}
 			</NavLink>
+			<NavLink to="/user/orders" className="btn btn-light mx-2">
+				Orders
+			</NavLink>
 			<Link to="/" className="btn btn-light mx-2" onClick={props.logout}>
 				Logout
 			</Link>

@@ -1,18 +1,15 @@
 import React, { Component } from 'react';
 import Products from './Products/Products';
 import { connect } from 'react-redux';
-import { getProducts } from '../store/actions/general';
-import Spinner from './../components/UI/Spinner/Spinner';
+import { getProducts } from '../store/actions/global';
 
 class Landing extends Component {
 	componentDidMount() {
-		if (this.props.general.products && this.props.general.products.length <= 0) {
-			this.props.getProducts();
-		}
+		this.props.getProducts();
 	}
 
 	render() {
-		const { loading, products } = this.props.general;
+		const { loading, products } = this.props.global;
 		let show = !products ? <div>No products found</div> : <Products products={products} />;
 
 		return (
@@ -26,14 +23,14 @@ class Landing extends Component {
 						</p>
 					</div>
 				</div>
-				{loading ? <Spinner /> : show}
+				{loading ? null : show}
 			</React.Fragment>
 		);
 	}
 }
 
 const mapStateToProps = (state) => ({
-	general: state.general
+	global: state.global
 });
 
 export default connect(mapStateToProps, { getProducts })(Landing);

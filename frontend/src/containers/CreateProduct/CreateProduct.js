@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Spinner from '../../components/UI/Spinner/Spinner';
-import { setAlert } from '../../store/actions/alert';
-
-import axios from 'axios';
+import { createProduct, updateProduct } from '../../store/actions/global';
 
 class CreateProduct extends Component {
 	state = {
@@ -11,10 +9,26 @@ class CreateProduct extends Component {
 			title: '',
 			description: '',
 			imageUrl: '',
-			price: 0
+			price: 0,
+			_id: ''
 		},
-		loading: false
+		loading: false,
+		update: false
 	};
+
+	componentWillMount() {
+		const id = this.props.match.params.id;
+		console.log('id', id);
+		if (id) {
+			// Get product from state
+			const products = this.props.global.companyProducts;
+			const productIndex = products.map((product) => product._id).indexOf(id);
+			const product = products[productIndex];
+			if (productIndex !== -1) {
+				this.setState({ product, update: true });
+			}
+		}
+	}
 
 	inputChangeHandler = (e) => {
 		const product = { ...this.state.product };
@@ -24,36 +38,28 @@ class CreateProduct extends Component {
 
 	submitHandler = async (e) => {
 		e.preventDefault();
-		try {
-			this.setState({ loading: true });
-			const body = JSON.stringify(this.state.product);
-			const config = { headers: { 'Content-Type': 'application/json' } };
-			await axios.post('/api/company/create', body, config);
-			this.props.setAlert('Created Product', 'success');
-		} catch (err) {
-			const error = err.response.data.msg;
-			if (error) this.props.setAlert(error, 'danger');
-			const errors = err.response.data.errors;
-			if (errors) errors.forEach((error) => this.props.setAlert(error.msg, 'danger'));
-		} finally {
-			this.setState({ loading: false });
+		if (this.state.update) {
+			this.props.updateProduct(this.state.product);
+		} else {
+			this.props.createProduct(this.state.product);
 		}
 	};
 	render() {
-		let loading = this.state.loading ? <Spinner /> : null;
+		let loading = this.props.global.loading ? <Spinner /> : null;
+		const { product, update } = this.state;
 		return (
 			<div className="container my-5">
 				<div className="row justify-content-center">
 					<div className="col-md-6 rounded shadow p-5">
 						{loading}
-						<h1>Create New Product</h1>
+						<h1>{update ? 'Update' : 'Create New'} Product</h1>
 						<hr />
 						<form>
 							<div className="form-group">
 								<label htmlFor="title">Title</label>
 								<input
 									onChange={this.inputChangeHandler}
-									value={this.state.title}
+									value={product.title}
 									type="text"
 									placeholder="Title"
 									id="title"
@@ -64,7 +70,7 @@ class CreateProduct extends Component {
 								<label htmlFor="price">Price</label>
 								<input
 									onChange={this.inputChangeHandler}
-									value={this.state.price}
+									value={product.price}
 									type="number"
 									placeholder="Price"
 									id="price"
@@ -75,7 +81,7 @@ class CreateProduct extends Component {
 								<label htmlFor="imageUrl">Image Url</label>
 								<input
 									onChange={this.inputChangeHandler}
-									value={this.state.imageUrl}
+									value={product.imageUrl}
 									type="text"
 									placeholder="http://"
 									id="imageUrl"
@@ -86,7 +92,7 @@ class CreateProduct extends Component {
 								<label htmlFor="description">Description</label>
 								<textarea
 									onChange={this.inputChangeHandler}
-									value={this.state.description}
+									value={product.description}
 									name="description"
 									id="description"
 									className="form-control"
@@ -102,4 +108,9 @@ class CreateProduct extends Component {
 		);
 	}
 }
-export default connect(null, { setAlert })(CreateProduct);
+
+const mapStateToProps = (state) => ({
+	global: state.global
+});
+
+export default connect(mapStateToProps, { createProduct, updateProduct })(CreateProduct);

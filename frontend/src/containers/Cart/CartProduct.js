@@ -1,12 +1,15 @@
 import React from 'react';
 import styles from './CartProduct.module.css';
+import { Link } from 'react-router-dom';
 
 export default function ShopingCartProduct(props) {
 	return (
 		<div className="d-flex flex-wrap my-5 shadow-sm position-relative">
 			<div onClick={props.click} className={styles.Close} />
 			<div className="col-3 pl-0">
-				<img className="img-fluid rounded shadow" src={props.image} alt={props.title} />
+				<Link to={`/product/${props.id}`}>
+					<img className="img-fluid rounded shadow" src={props.image} alt={props.title} />
+				</Link>
 			</div>
 			<div className="col-6 py-3">
 				<h4 className="mb-2">{props.title}</h4>

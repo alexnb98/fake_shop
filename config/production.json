@@ -1,0 +1,4 @@
+{
+	"mongoURI": "mongodb+srv://alexnb98:alex0502@fakeshop-1wpxi.mongodb.net/shop",
+	"jwtSecret": "mysupersecretkey"
+}

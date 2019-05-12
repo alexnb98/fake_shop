@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
 import Products from '../Products/Products';
 import Spinner from './../../components/UI/Spinner/Spinner';
-import { getProducts } from '../../store/actions/company';
+import { getCompanyProducts } from '../../store/actions/global';
 import { connect } from 'react-redux';
 
 class CompanyProducts extends Component {
 	componentDidMount() {
-		if (this.props.company.products && this.props.company.products.length <= 0) {
-			this.props.getProducts();
+		const id = this.props.match.params.id;
+		if (id) {
+			this.props.getCompanyProducts(id);
+		} else {
+			this.props.getCompanyProducts();
 		}
 	}
 
 	render() {
-		const { products, loading } = this.props.company;
-		let show = !products ? <div>No products found</div> : <Products products={products} />;
+		const { companyProducts, loading } = this.props.global;
+		let show = !companyProducts ? <div>No products found</div> : <Products products={companyProducts} />;
 		return (
 			<React.Fragment>
 				<div className="jumbotron">
@@ -29,7 +32,7 @@ class CompanyProducts extends Component {
 }
 
 const mapStateToProps = (state) => ({
-	company: state.company
+	global: state.global
 });
 
-export default connect(mapStateToProps, { getProducts })(CompanyProducts);
+export default connect(mapStateToProps, { getCompanyProducts })(CompanyProducts);

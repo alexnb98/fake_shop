@@ -11,16 +11,14 @@ const initialState = {
 export default (state = initialState, { type, payload }) => {
 	switch (type) {
 		case actions.SET_USER_TYPE:
+			console.log('payload', payload);
 			return { ...state, userType: payload.type, id: payload.id };
 		case actions.REGISTER_START:
 			return { ...state, loading: true };
-		case actions.REGISTER_SUCCESS:
-			localStorage.setItem('token', payload);
-			return { ...state, loading: false, token: payload };
 		case actions.LOGIN_START:
 			return { ...state, loading: true };
+		case actions.REGISTER_SUCCESS:
 		case actions.LOGIN_SUCCESS:
-			console.log('LOGIN SUCCESS payload', payload);
 			localStorage.setItem('token', payload);
 			setAuthToken(payload);
 			return { ...state, loading: false, token: payload };

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { loginUser } from '../../store/actions/auth';
+import { login } from '../../store/actions/auth';
 
 class Login extends Component {
 	state = {
@@ -16,7 +16,7 @@ class Login extends Component {
 
 	onSubmit = (e) => {
 		e.preventDefault();
-		this.props.loginUser({ email: this.state.email, password: this.state.password }, this.state.isUser);
+		this.props.login({ email: this.state.email, password: this.state.password }, this.state.isUser);
 	};
 
 	changeUser = () => this.setState({ isUser: true });
@@ -78,4 +78,4 @@ class Login extends Component {
 	}
 }
 
-export default connect(null, { loginUser })(Login);
+export default connect(null, { login })(Login);

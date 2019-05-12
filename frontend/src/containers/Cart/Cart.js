@@ -3,7 +3,7 @@ import CartProduct from './CartProduct';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import OrderCheckout from '../Checkout/OrderCheckout';
-import { getCart } from '../../store/actions/user';
+import { getCart, removeFromCart } from '../../store/actions/global';
 
 class Cart extends Component {
 	componentDidMount() {
@@ -11,8 +11,8 @@ class Cart extends Component {
 	}
 
 	render() {
-		const { cart } = this.props;
-		let inCartProducts = (
+		const { cart, loading } = this.props.global;
+		let inCartProducts = loading ? null : (
 			<div className="p-5 shadow rounded text-center">
 				<p className="display-4">Your Cart is Empty</p>
 				<Link to="/" className="btn btn-outline-primary btn-lg">
@@ -23,19 +23,20 @@ class Cart extends Component {
 		let order = null;
 		if (cart.length) {
 			const totalPrice = cart.reduce((acc, cur) => {
-				return acc + cur.product.price * cur.number;
+				return acc + cur.product.price * cur.quantity;
 			}, 0);
 			order = <OrderCheckout totalPrice={totalPrice} />;
 			inCartProducts = cart.map((item) => {
 				return (
 					<CartProduct
 						key={item.product._id}
+						id={item.product._id}
 						title={item.product.title}
-						// click={() => this.props.onRemoveItem(item.id)}
+						click={() => this.props.removeFromCart(item.product._id)}
 						price={item.product.price}
-						image={item.product.image}
+						image={item.product.imageUrl}
 						color={item.product.color}
-						number={item.product.number}
+						number={item.quantity}
 					/>
 				);
 			});
@@ -55,7 +56,7 @@ class Cart extends Component {
 
 const mapStateToProps = (state) => {
 	return {
-		cart: state.user.cart
+		global: state.global
 	};
 };
-export default connect(mapStateToProps, { getCart })(Cart);
+export default connect(mapStateToProps, { getCart, removeFromCart })(Cart);

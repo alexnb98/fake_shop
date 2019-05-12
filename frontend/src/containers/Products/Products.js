@@ -12,7 +12,7 @@ class Products extends Component {
 							title={product.title}
 							id={product._id}
 							description={product.description}
-							image={product.image}
+							image={product.imageUrl}
 							price={product.price}
 						/>
 					</div>
