@@ -25,7 +25,7 @@ class Cart extends Component {
 			const totalPrice = cart.reduce((acc, cur) => {
 				return acc + cur.product.price * cur.quantity;
 			}, 0);
-			order = <OrderCheckout totalPrice={totalPrice} />;
+			order = <OrderCheckout totalPrice={totalPrice.toFixed(2)} $ />;
 			inCartProducts = cart.map((item) => {
 				return (
 					<CartProduct

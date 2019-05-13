@@ -13,7 +13,6 @@ const handleError = (err, dispatch) => {
 
 export const getProducts = () => async (dispatch) => {
 	try {
-		console.log('getProducts');
 		dispatch({ type: actions.LOADING_START });
 		const res = await axios.get('api/product');
 		dispatch({

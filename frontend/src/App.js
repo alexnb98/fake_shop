@@ -9,14 +9,14 @@ import setAuthToken from './utils/setAuthToken';
 import Routes from './components/routes/Routes';
 import Landing from './containers/Landing';
 
-if (localStorage.token) {
-	setAuthToken(localStorage.token);
+if (sessionStorage.token) {
+	setAuthToken(sessionStorage.token);
 }
 
 class App extends Component {
 	componentDidMount() {
 		store.dispatch(setUserType());
-		setAuthToken(localStorage.token);
+		setAuthToken(sessionStorage.token);
 	}
 	render() {
 		return (

@@ -3,9 +3,8 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Pill from './Pill';
-import SelectPill from './SelectPill';
 import { setAlert } from '../../store/actions/alert';
-import { removeFromCart } from '../../store/actions/global';
+import { removeFromCart, getCart } from '../../store/actions/global';
 import Spinner from './../../components/UI/Spinner/Spinner';
 
 class Product extends Component {
@@ -25,7 +24,6 @@ class Product extends Component {
 				.get(`/api/product/${productId}`)
 				.then((res) => {
 					this.setState({ product: res.data });
-					// this.checkCart();
 				})
 				.catch((err) => console.log('err', err))
 				.then(() => {
@@ -34,26 +32,30 @@ class Product extends Component {
 		} else {
 			this.setState({ product: product[0] });
 		}
+		this.checkCart();
 	}
 
 	checkCart() {
-		// getCart();
-		// const { cart } = this.props.global;
-		// this.setState((state, props) => {
-		// 	console.log('state.product', state.product);
-		// 	const productIndex = cart
-		// 		.map((product) => {
-		// 			console.log('product', product);
-		// 			return product.product._id === state.product._id;
-		// 		})
-		// 		.indexOf(state.product._id);
-		// 	const quantity = cart[productIndex].quantity;
-		// 	if (quantity) {
-		// 		return { quantity, inCart: true };
-		// 	}
-		// 	return { inCart: false };
-		// });
+		console.log('this.state.product', this.state.product);
+		const product = this.props.global.cart.filter((product) => {
+			// return product.product._id === this.state.product._id;
+		});
+		console.log(product[0]);
 	}
+
+	incrementQuantity = () => {
+		this.setState((state) => {
+			return { quantity: state.quantity + 1 };
+		});
+	};
+
+	decrementQuantity = () => {
+		if (this.state.quantity > 1) {
+			this.setState((state) => {
+				return { quantity: state.quantity - 1 };
+			});
+		}
+	};
 
 	deleteProduct = async () => {
 		try {
@@ -78,7 +80,7 @@ class Product extends Component {
 	};
 
 	render() {
-		const { product, inCart, loading } = this.state;
+		const { product, inCart, loading, quantity } = this.state;
 		let productComponent = loading ? (
 			<Spinner />
 		) : (
@@ -110,12 +112,16 @@ class Product extends Component {
 									BUY
 								</button>
 							</div>
-							<div className="col-4">
-								<SelectPill
-									change={this.numberChangeHandler}
-									value={this.state.number}
-									numbers={[ 1, 2, 3, 4, 5 ]}
-								/>
+							<div className="col-4 px-0 d-flex justify-content-between">
+								<button onClick={this.incrementQuantity} className="btn btn-outline-success col-4">
+									+
+								</button>
+								<div className="rounded mx-1 bg-secondary col-4 d-flex align-items-center justify-content-center">
+									<span className="text-white">{quantity}</span>
+								</div>
+								<button onClick={this.decrementQuantity} className="btn btn-outline-danger col-4">
+									-
+								</button>
 							</div>
 							<div className="col-4">
 								<button

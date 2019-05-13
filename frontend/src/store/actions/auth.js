@@ -61,7 +61,7 @@ export const login = ({ email, password }, isUser) => async (dispatch) => {
 };
 
 export const setUserType = () => (dispatch) => {
-	const token = localStorage.token;
+	const token = sessionStorage.token;
 	if (!token) return dispatch({ type: actions.SET_USER_TYPE, payload: { type: false, id: null } });
 	const decode = jwt_decode(token);
 	if (decode.company) {
