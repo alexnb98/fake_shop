@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { register } from '../../store/actions/auth';
+import { register } from '../../../store/actions/auth';
 
 class SignUp extends Component {
 	state = {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Products from './Products/Products';
 import { connect } from 'react-redux';
-import { getProducts } from '../store/actions/global';
+import { getProducts } from '../../store/actions/global';
 
 class Landing extends Component {
 	componentDidMount() {

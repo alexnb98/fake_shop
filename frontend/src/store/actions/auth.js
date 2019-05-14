@@ -1,16 +1,7 @@
-import axios from 'axios';
+import axios from '../../utils/axiosInstance';
 import * as actions from './types';
 import { setAlert } from './alert';
 import jwt_decode from 'jwt-decode';
-
-const handleError = (err, dispatch) => {
-	console.error({ ...err });
-	const error = err.response && err.response.data.msg;
-	if (error) setAlert(error, 'danger');
-	const errors = err.response && err.response.data.errors;
-	if (errors) errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
-	dispatch(setAlert('something went wrong', 'danger'));
-};
 
 export const register = ({ name, email, password, isUser }) => async (dispatch) => {
 	const config = { headers: { 'Content-Type': 'application/json' } };
@@ -30,7 +21,7 @@ export const register = ({ name, email, password, isUser }) => async (dispatch) 
 		});
 		dispatch(setUserType());
 	} catch (err) {
-		handleError(err, dispatch);
+		console.log('[actions/auth.js] register', { ...err });
 		dispatch({ type: actions.REGISTER_FAIL });
 	}
 };
@@ -49,10 +40,7 @@ export const login = ({ email, password }, isUser) => async (dispatch) => {
 		dispatch(setUserType());
 		dispatch(setAlert('Login Successfull', 'success'));
 	} catch (err) {
-		const error = err.response.data.msg;
-		if (error) dispatch(setAlert(error, 'danger'));
-		const errors = err.response.data.errors;
-		if (errors) errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+		console.log('[actions/auth.js] login', { ...err });
 		dispatch({
 			type: actions.LOGIN_FAIL,
 			payload: { msg: err.response.data.msg, status: err.response.status }

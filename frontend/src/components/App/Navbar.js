@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { logout } from '../store/actions/auth';
+import { logout } from '../../store/actions/auth';
 
 const Navbar = function(props) {
 	let numberOfItems = null;

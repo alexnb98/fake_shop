@@ -1,15 +1,6 @@
-import axios from 'axios';
+import axios from '../../utils/axiosInstance';
 import * as actions from './types';
 import { setAlert } from './alert';
-
-const handleError = (err, dispatch) => {
-	console.error({ ...err });
-	const error = err.response && err.response.data.msg;
-	if (error) setAlert(error, 'danger');
-	const errors = err.response && err.response.data.errors;
-	if (errors) errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
-	dispatch(setAlert('something went wrong', 'danger'));
-};
 
 export const getProducts = () => async (dispatch) => {
 	try {
@@ -20,7 +11,7 @@ export const getProducts = () => async (dispatch) => {
 			payload: res.data
 		});
 	} catch (err) {
-		handleError(err, dispatch);
+		console.error('[actions/global.js] login', { ...err });
 	} finally {
 		dispatch({ type: actions.LOADING_END });
 	}
@@ -28,7 +19,6 @@ export const getProducts = () => async (dispatch) => {
 
 export const getCompanyProducts = (id) => async (dispatch) => {
 	try {
-		console.log('getCompanyProducts');
 		dispatch({ type: actions.LOADING_START });
 		let res;
 		if (id) {
@@ -39,7 +29,7 @@ export const getCompanyProducts = (id) => async (dispatch) => {
 		}
 		dispatch({ type: actions.GET_COMPANY_PRODUCTS, payload: res.data });
 	} catch (err) {
-		handleError(err, dispatch);
+		console.error('[actions/global.js] getCompanyProducts', { ...err });
 	} finally {
 		dispatch({ type: actions.LOADING_END });
 	}
@@ -51,7 +41,7 @@ export const getCart = () => async (dispatch) => {
 		const res = await axios.get('/api/user/cart');
 		dispatch({ type: actions.GET_CART, payload: res.data });
 	} catch (err) {
-		handleError(err, dispatch);
+		console.error('[actions/global.js] getCart', { ...err });
 	} finally {
 		dispatch({ type: actions.LOADING_END });
 	}
@@ -64,7 +54,7 @@ export const removeFromCart = (id) => async (dispatch) => {
 		setAlert('Item removed from Cart', 'success');
 		dispatch({ type: actions.GET_CART, payload: res.data });
 	} catch (err) {
-		handleError(err, dispatch);
+		console.error('[actions/global.js] removeFromCart', { ...err });
 	} finally {
 		dispatch({ type: actions.LOADING_END });
 	}
@@ -76,10 +66,9 @@ export const makeOrder = (userAddress) => async (dispatch) => {
 		const config = { headers: { 'Content-Type': 'application/json' } };
 		const body = JSON.stringify(userAddress);
 		const res = await axios.post('/api/user/order', body, config);
-		console.log('res.data SHOULD BE NEW CART', res.data);
-		dispatch({ type: actions.GET_ORDER, payload: res.data });
+		dispatch({ type: actions.GET_CART, payload: res.data });
 	} catch (err) {
-		handleError(err, dispatch);
+		console.error('[actions/global.js] makeOrder', { ...err });
 	} finally {
 		dispatch({ type: actions.LOADING_END });
 	}
@@ -89,10 +78,9 @@ export const getOrders = () => async (dispatch) => {
 	dispatch({ type: actions.LOADING_START });
 	try {
 		const res = await axios.get('/api/user/order');
-		console.log('res.data ORDERS', res.data);
 		dispatch({ type: actions.GET_ORDER, payload: res.data });
 	} catch (err) {
-		handleError(err, dispatch);
+		console.error('[actions/global.js] getOrders', { ...err });
 	} finally {
 		dispatch({ type: actions.LOADING_END });
 	}
@@ -103,10 +91,10 @@ export const createProduct = (product) => async (dispatch) => {
 		const body = JSON.stringify(product);
 		const config = { headers: { 'Content-Type': 'application/json' } };
 		dispatch({ type: actions.LOADING_START });
-		const res = await axios.post('/api/company/create', body, config);
+		await axios.post('/api/company/create', body, config);
 		dispatch(setAlert('Product Created', 'success'));
 	} catch (err) {
-		dispatch(setAlert(err.response, 'success'));
+		console.error('[actions/global.js] createProduct', { ...err });
 	} finally {
 		dispatch({ type: actions.LOADING_END });
 	}
@@ -117,13 +105,24 @@ export const updateProduct = (product) => async (dispatch) => {
 		dispatch({ type: actions.UPDATE_PRODUCT });
 		const config = { headers: { 'Content-Type': 'application/json' } };
 		const body = JSON.stringify(product);
-		const res = await axios.put(`/api/company/${product._id}`, body, config);
-		console.log('res.data', res.data);
+		await axios.put(`/api/company/${product._id}`, body, config);
 		dispatch(setAlert('Product Updated', 'success'));
 		dispatch({ type: actions.UPDATE_PRODUCT_SUCCESS });
 	} catch (err) {
-		console.log('err', { ...err });
-		dispatch(setAlert(err.response, 'success'));
+		console.error('[actions/global.js] updateProduct', { ...err });
 		dispatch({ type: actions.UPDATE_PRODUCT_FAIL });
+	}
+};
+
+export const addToCart = (productId, quantity) => async (dispatch) => {
+	try {
+		const config = { headers: { 'Content-Type': 'application/json' } };
+		const body = JSON.stringify({ productId, quantity });
+		const res = await axios.post('/api/user/cart', body, config);
+		dispatch(setAlert('Product Added To Cart', 'success'));
+		dispatch({ type: actions.GET_CART, payload: res.data });
+	} catch (err) {
+		console.error('[actions/global.js] addToCart', { ...err });
+		dispatch({ type: actions.LOADING_END });
 	}
 };

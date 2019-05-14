@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Products from '../Products/Products';
-import Spinner from './../../components/UI/Spinner/Spinner';
+import Products from '../App/Products/Products';
+import Spinner from '../UI/Spinner/Spinner';
 import { getCompanyProducts } from '../../store/actions/global';
 import { connect } from 'react-redux';
 

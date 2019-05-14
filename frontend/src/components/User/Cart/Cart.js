@@ -3,7 +3,7 @@ import CartProduct from './CartProduct';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import OrderCheckout from '../Checkout/OrderCheckout';
-import { getCart, removeFromCart } from '../../store/actions/global';
+import { getCart, removeFromCart } from '../../../store/actions/global';
 
 class Cart extends Component {
 	componentDidMount() {
@@ -11,22 +11,27 @@ class Cart extends Component {
 	}
 
 	render() {
-		const { cart, loading } = this.props.global;
+		const loading = this.props.global.loading;
 		let inCartProducts = loading ? null : (
 			<div className="p-5 shadow rounded text-center">
 				<p className="display-4">Your Cart is Empty</p>
 				<Link to="/" className="btn btn-outline-primary btn-lg">
 					Start Shoping
 				</Link>
+				<div className="my-3 border-bottom" />
+				<p className="display-4">See your Orders</p>
+				<Link to="/user/orders" className="btn btn-outline-success btn-lg">
+					Orders
+				</Link>
 			</div>
 		);
 		let order = null;
-		if (cart.length) {
-			const totalPrice = cart.reduce((acc, cur) => {
+		if (this.props.global.cart && this.props.global.cart.length) {
+			const totalPrice = this.props.global.cart.reduce((acc, cur) => {
 				return acc + cur.product.price * cur.quantity;
 			}, 0);
-			order = <OrderCheckout totalPrice={totalPrice.toFixed(2)} $ />;
-			inCartProducts = cart.map((item) => {
+			order = <OrderCheckout totalPrice={totalPrice.toFixed(2)} />;
+			inCartProducts = this.props.global.cart.map((item) => {
 				return (
 					<CartProduct
 						key={item.product._id}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { makeOrder } from '../../store/actions/global';
+import { makeOrder } from '../../../store/actions/global';
 import { connect } from 'react-redux';
 
 class OrderCheckout extends Component {
@@ -22,7 +22,7 @@ class OrderCheckout extends Component {
 			<div>
 				<div className="p-3 rounded bg-light shadow my-3">
 					<h2 className="text-center mb-3">Make the Order</h2>
-					<p className="display-4">Total: {this.props.totalPrice}</p>
+					<p className="display-4">Total: {this.props.totalPrice}$</p>
 					<form onSubmit={this.submitHandler}>
 						<div className="form-group">
 							<label htmlFor="userAddress">Your Address</label>

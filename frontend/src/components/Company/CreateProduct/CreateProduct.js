@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Spinner from '../../components/UI/Spinner/Spinner';
-import { createProduct, updateProduct } from '../../store/actions/global';
+import Spinner from '../../UI/Spinner/Spinner';
+import { createProduct, updateProduct } from '../../../store/actions/global';
 
 class CreateProduct extends Component {
 	state = {

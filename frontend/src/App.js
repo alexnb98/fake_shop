@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import store from './store/store';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import Alert from './components/Alert';
+import Navbar from './components/App/Navbar';
+import Alert from './components/App/Alert';
 import { setUserType } from './store/actions/auth';
 import setAuthToken from './utils/setAuthToken';
 import Routes from './components/routes/Routes';
-import Landing from './containers/Landing';
+import Landing from './components/App/Landing';
 
 if (sessionStorage.token) {
 	setAuthToken(sessionStorage.token);

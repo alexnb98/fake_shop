@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Spinner from './UI/Spinner/Spinner';
+import Spinner from '../UI/Spinner/Spinner';
 
 const Alert = ({ alerts, global }) => {
 	let alertsDiv = null;
@@ -16,7 +16,7 @@ const Alert = ({ alerts, global }) => {
 	}
 	const loader = global.loading ? <Spinner /> : null;
 	return (
-		<div className="container position-absolute" style={{ left: 0, right: 0, bottom: 0, zIndex: 1000 }}>
+		<div className="container position-fixed" style={{ left: 0, right: 0, top: '4rem', zIndex: 1000 }}>
 			<div className="row justify-content-center">
 				<div className="col-md-6">{alertsDiv}</div>
 			</div>

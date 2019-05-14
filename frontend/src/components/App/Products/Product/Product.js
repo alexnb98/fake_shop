@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import axios from 'axios';
+import axios from '../../../../utils/axiosInstance';
 import { Link } from 'react-router-dom';
-import Pill from './Pill';
-import { setAlert } from '../../store/actions/alert';
-import { removeFromCart, getCart } from '../../store/actions/global';
-import Spinner from './../../components/UI/Spinner/Spinner';
+import Pill from '../Pill';
+import { setAlert } from '../../../../store/actions/alert';
+import { removeFromCart, addToCart } from '../../../../store/actions/global';
+import Spinner from '../../../UI/Spinner/Spinner';
 
 class Product extends Component {
 	state = {
@@ -32,15 +32,24 @@ class Product extends Component {
 		} else {
 			this.setState({ product: product[0] });
 		}
-		this.checkCart();
 	}
 
-	checkCart() {
-		console.log('this.state.product', this.state.product);
-		const product = this.props.global.cart.filter((product) => {
-			// return product.product._id === this.state.product._id;
-		});
-		console.log(product[0]);
+	componentDidUpdate() {
+		//TODO: IMPROVE THIS CODE
+		if (this.props.global.cart && this.props.global.cart.length > 0 && !this.state.inCart) {
+			const prodIndex = this.props.global.cart
+				.map((item) => {
+					console.log('item.product._id', item.product._id);
+					return item.product._id;
+				})
+				.indexOf(this.state.product._id);
+			console.log('this.state.product._id', this.state.product._id);
+			console.log('prodIndex', prodIndex);
+			if (prodIndex !== -1) {
+				this.setState({ quantity: this.props.global.cart[prodIndex].quantity, inCart: true });
+			}
+		}
+		console.log('componendiddupdate');
 	}
 
 	incrementQuantity = () => {
@@ -63,19 +72,7 @@ class Product extends Component {
 			this.props.setAlert('Product Removed From Cart', 'success');
 			this.props.history.push('/company/products');
 		} catch (err) {
-			console.error({ ...err });
-		}
-	};
-
-	addToCart = async () => {
-		try {
-			const config = { headers: { 'Content-Type': 'application/json' } };
-			const body = JSON.stringify({ productId: this.state.product._id, quantity: this.state.quantity });
-			await axios.post('/api/user/cart', body, config);
-			setAlert('Product Added To Cart', 'success');
-		} catch (err) {
-			console.error({ ...err });
-			setAlert('Something went wrong', 'danger');
+			console.error('[Product.js] deleteProduct', { ...err });
 		}
 	};
 
@@ -108,7 +105,10 @@ class Product extends Component {
 						<Pill content={'Price: ' + product.price + '$'} />
 						<div className="d-flex flex-wrap">
 							<div className="col-4 pl-0">
-								<button onClick={this.addToCart} className="btn btn-primary btn-lg btn-block">
+								<button
+									onClick={() => this.props.addToCart(this.state.product._id, this.state.quantity)}
+									className="btn btn-primary btn-lg btn-block"
+								>
 									BUY
 								</button>
 							</div>
@@ -152,10 +152,8 @@ class Product extends Component {
 			);
 		}
 		return (
-			<div>
-				<div className="container my-5">
-					<div className="row">{productComponent}</div>
-				</div>
+			<div className="container my-5">
+				<div className="row">{productComponent}</div>
 			</div>
 		);
 	}
@@ -166,4 +164,4 @@ const mapStateToProps = (state) => ({
 	auth: state.auth
 });
 
-export default connect(mapStateToProps, { setAlert, removeFromCart })(Product);
+export default connect(mapStateToProps, { setAlert, removeFromCart, addToCart })(Product);
