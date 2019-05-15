@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import Products from './Products/Products';
 import { connect } from 'react-redux';
-import { getProducts } from '../../store/actions/global';
+import { getProducts, getCart } from '../../store/actions/global';
 
 class Landing extends Component {
 	componentDidMount() {
 		this.props.getProducts();
+		if (this.props.auth.userType === 'user') {
+			this.props.getCart();
+		}
 	}
 
 	render() {
@@ -30,7 +33,8 @@ class Landing extends Component {
 }
 
 const mapStateToProps = (state) => ({
-	global: state.global
+	global: state.global,
+	auth: state.auth
 });
 
-export default connect(mapStateToProps, { getProducts })(Landing);
+export default connect(mapStateToProps, { getProducts, getCart })(Landing);

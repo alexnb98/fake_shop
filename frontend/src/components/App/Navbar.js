@@ -37,10 +37,10 @@ const Navbar = function(props) {
 
 	const guestLinks = (
 		<React.Fragment>
-			<NavLink to="login" className="btn btn-outline-light mx-2">
+			<NavLink to="/login" className="btn btn-outline-light mx-2">
 				Login
 			</NavLink>
-			<NavLink to="signup" className="btn btn-outline-light mx-2">
+			<NavLink to="/signup" className="btn btn-outline-light mx-2">
 				Sign up
 			</NavLink>
 		</React.Fragment>
